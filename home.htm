@@ -1,0 +1,28 @@
+title = "Homepage"
+url = "/"
+layout = "checkin"
+is_hidden = 0
+
+[account]
+redirect = "checkin"
+paramCode = "code"
+forceSecure = 0
+
+[session]
+security = "all"
+==
+<?php
+function onStart() {
+    if ( Auth::check() && Input::get("command") == "logout" ) {
+        Auth::logout();
+    }
+}
+?>
+==
+{% component 'account' %}
+
+</br>
+
+    {% if user %}
+ <a href="" data-request="onLogout"><input type="submit" name="submit" value="Logout"></a>
+ {% endif  %}

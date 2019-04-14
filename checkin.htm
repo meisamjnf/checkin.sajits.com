@@ -1,0 +1,190 @@
+title = "checkin"
+url = "/checkin"
+layout = "checkin"
+is_hidden = 0
+
+[session]
+security = "all"
+
+[account]
+redirect = "home"
+paramCode = "code"
+forceSecure = 0
+==
+<?php
+function onStart() {
+    if ( Auth::check() ) {
+        $this["b1"] = Auth::getUser()->name;
+        $this["a1"] = "hi " . $this["b1"];
+    }
+    
+$myObj = new \stdClass();
+$myObj->id = "";
+$myObj->username = $this["b1"];
+$myObj->time = date('r', strtotime(post("bdaytime")));
+$this["a2"] = json_encode($myObj);
+
+
+
+//if(isset($_POST['username'])){
+    
+//if(post("vurud") == "vurud1") {
+    
+//    $j = $this-> callAPI('POST', 'http://192.168.0.2:32768/people/' . $_POST["a2"]);
+
+    
+    
+//}
+//}
+
+}
+
+
+
+
+ 
+
+
+
+
+
+//cUrl setup
+
+function callAPI($method, $url, $data){
+   $curl = curl_init();
+
+   switch ($method){
+      case "POST":
+         curl_setopt($curl, CURLOPT_POST, 1);
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+         break;
+      case "PUT":
+         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
+         break;
+      default:
+         if ($data)
+            $url = sprintf("%s?%s", $url, http_build_query($data));
+   }
+
+   // OPTIONS:
+   curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($curl, CURLOPT_USERPWD, "username:password");
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    $result = curl_exec($curl);
+
+    curl_close($curl);
+
+    return $result;
+}
+?>
+==
+{{a1}}
+{{a2}}
+
+</br></br></br>
+
+
+<body onload="startTime()"> </br>
+
+<script language="javascript" link="www.js4ir.com">
+function showdate() {
+    week= new Array("يكشنبه","دوشنبه","سه شنبه","چهارشنبه","پنج شنبه","جمعه","شنبه")
+    months = new Array("فروردين","ارديبهشت","خرداد","تير","مرداد","شهريور","مهر","آبان","آذر","دی","بهمن","اسفند");
+    a = new Date();
+    d= a.getDay();
+    day= a.getDate();
+    month = a.getMonth()+1;
+    year= a.getYear()-100;
+
+	year = (year== 0)?2000:year;
+	(year<1000)? (year += 2000):true;
+
+	year -= ( (month < 3) || ((month == 3) && (day < 21)) )? 622:621;
+
+	switch (month) {
+    	case 1: (day<21)? (month=10, day+=10):(month=11, day-=20); break;
+    	case 2: (day<20)? (month=11, day+=11):(month=12, day-=19); break;
+    	case 3: (day<21)? (month=12, day+=9):(month=1, day-=20);   break;
+    	case 4: (day<21)? (month=1, day+=11):(month=2, day-=20);   break;
+    	case 5:
+    	case 6: (day<22)? (month-=3, day+=10):(month-=2, day-=21); break;
+    	case 7:
+    	case 8:
+    	case 9: (day<23)? (month-=3, day+=9):(month-=2, day-=22);  break;
+    	case 10:(day<23)? (month=7, day+=8):(month=8, day-=22);    break;
+    	case 11:
+    	case 12:(day<22)? (month-=3, day+=9):(month-=2, day-=21);  break;
+       default:  	break;
+	}
+document.write(week[d]+" "+day+" "+months[month-1]+" "+ year);
+}
+</script>
+<script>showdate()</script> <p id="txt"></p>
+
+
+
+
+
+<script>
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+  h + ":" + m + ":" + s;
+  var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+</script>
+<p id="txt"></p>
+
+
+
+<br><br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<form method ="post" action="">
+date and time:
+<input type="datetime-local" name="bdaytime" value="a1"></br>
+<input type ="radio" name="vurud" value="vurud1">ورود</br>
+<input type ="radio" name="vurud" value="vurud2">خروج</br></br>
+
+
+<input type ="submit" name="submit" value= "submit"></br>
+
+</form>
+
+
+  {% if user %}
+  <a href="/?command=logout"><input type="submit" name="submit" value ="خروج"> </a>
+ {% endif  %}
+
+</br>
+</br>
